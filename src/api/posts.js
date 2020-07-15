@@ -13,7 +13,7 @@ const posts = [
     body: "redux-thunk를 사용해서 비동기 작업을 처리해보자..",
   },
   {
-    id: 1,
+    id: 3,
     title: "redux-saga를 사용해보자.",
     body: "redux-saga를 사용해서 비동기 작업을 처리해보자..",
   },
