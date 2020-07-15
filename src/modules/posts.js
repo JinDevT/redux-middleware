@@ -1,10 +1,11 @@
 // api 요청하면 진행중, 성공했을 떄 데이터의 상태, 실패했을 떄 에러의 상태를 관리
-import * as postAPI from "../api/posts";
+import * as postsAPI from "../api/posts";
 import {
   reducerUtils,
   createPromiseThunk,
   handleAsyncActions,
 } from "../lib/asyncUtils";
+import { call, put, takeEvery } from "redux-saga/effects";
 
 // api 요청 할때 액션을 만들어야 하는데 각 api 마다 세개씩 만든다.
 
@@ -16,8 +17,56 @@ const GET_POST = "GET_POST";
 const GET_POST_SUCCESS = "GET_POST_SUCCESS";
 const GET_POST_ERROR = "GET_POST_ERROR";
 
-export const getPosts = createPromiseThunk(GET_POSTS, postAPI.getPosts);
-export const getPost = createPromiseThunk(GET_POST, postAPI.getPostsById);
+// export const getPosts = createPromiseThunk(GET_POSTS, postAPI.getPosts);
+// export const getPost = createPromiseThunk(GET_POST, postAPI.getPostsById);
+
+export const getPosts = () => ({ type: GET_POSTS });
+export const getPost = (id) => ({
+  type: GET_POST,
+  payload: id,
+  meta: id,
+});
+
+function* getPostsSaga() {
+  try {
+    const posts = yield call(postsAPI.getPosts);
+    yield put({
+      type: GET_POSTS_SUCCESS,
+      payload: posts,
+    });
+  } catch (e) {
+    yield put({
+      type: GET_POSTS_ERROR,
+      payload: e,
+      error: true,
+    });
+  }
+}
+
+function* getPostSaga(action) {
+  const id = action.payload;
+  try {
+    const post = yield call(postsAPI.getPostsById, id);
+    yield put({
+      type: GET_POST_SUCCESS,
+      payload: post,
+      meta: id,
+    });
+  } catch (e) {
+    yield put({
+      type: GET_POST_ERROR,
+      payload: e,
+      error: true,
+      meta: id,
+    });
+  }
+}
+
+//action 모니터링
+export function* postsSaga() {
+  yield takeEvery(GET_POSTS, getPostsSaga);
+  yield takeEvery(GET_POST, getPostSaga);
+}
 
 const initialState = {
   posts: reducerUtils.initial(),
