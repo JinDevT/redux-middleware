@@ -5,6 +5,7 @@ import PostList from "../components/PostList";
 
 function PostListContainer({ postId }) {
   const { data, loading, error } = useSelector((state) => state.posts.posts);
+  console.log(data);
   const dispatch = useDispatch();
 
   // dispatch 넣어주는 이유: 훅을 사용해서 dispatch를 가져온거이기 때문에.
