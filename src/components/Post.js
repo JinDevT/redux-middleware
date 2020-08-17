@@ -1,6 +1,7 @@
 import React from "react";
 
 function Post({ post }) {
+  console.log("post:", post);
   const { title, body } = post;
   return (
     <div>
