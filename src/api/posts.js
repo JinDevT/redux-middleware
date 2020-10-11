@@ -9,7 +9,7 @@ export const getPosts = async () => {
     console.log(res.data);
     return res.data.data;
   } catch (e) {
-    console.error("error!!", e);
+    console.error("error!!!", e);
   }
 };
 
